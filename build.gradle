@@ -1,0 +1,49 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.2'
+	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
+	id 'java'
+}
+
+group = 'pro.ganyushkin'
+sourceCompatibility = '17'
+
+def VERSION_FILE = 'build.version'
+def DEFAULT_VERSION = "x.x.x"
+def versionFile = new File(VERSION_FILE)
+version = versionFile.exists() ? versionFile.getText('UTF-8').replaceAll('\\s+$', '') : DEFAULT_VERSION
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.apache.commons:commons-collections4:4.4'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.4'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+springBoot {
+	buildInfo {
+		properties {
+			additional = [
+					buildTime : new Date().format("yyyy-MM-dd'T'HH:mm:ss z")
+			]
+		}
+	}
+}
